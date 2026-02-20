@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ME Activity Indicator</title>
+
+<style>
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f1f1f4;
+  overflow: hidden;
+  height: 100vh;
+  transition: background 0.3s ease;
+}
+
+/* DEMO CONTROLES */
+.controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 95%;
+  max-width: 900px;
+  max-height: 45vh;
+  overflow-y: auto;
+  background: white;
+  padding: 16px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.controls button {
+  padding: 10px 6px;
+  background: #1f1f25;
+  border: none;
+  color: white;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 11px;
+}
+
+.controls button:hover { background: #2a2a32; }
+.controls button.finish { background: #ef4444; grid-column: span 4; margin-top: 4px; }
+.controls .section-title { grid-column: span 4; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; margin-top: 8px; margin-bottom: 2px;}
+
+.config-row {
+  grid-column: span 4;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.select-group {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.select-group button {
+  background: #e2e8f0;
+  color: #475569;
+  font-size: 9px;
+  padding: 6px 10px;
+}
+.select-group button.active {
+  background: #3b82f6;
+  color: white;
+}
+
+.bmc-link {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffdd00;
+  color: #000;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 12px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.bmc-link:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.bmc-link:active { transform: scale(0.96); }
+.bmc-link svg { width: 16px; height: 16px; }
+</style>
+</head>
+
+<body>
+
+<a class="bmc-link" href="https://buymeacoffee.com/marcosesperon" target="_blank" rel="noopener">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+  Buy me a coffee
+</a>
+
+<div class="controls">
+  <div class="config-row">
+    <div class="section-title">Ubicación</div>
+    <div class="select-group position-select">
+      <button onclick="changePosition('top-left', this)">Arr. Izquierda</button>
+      <button onclick="changePosition('top-center', this)" class="active">Arr. Centro</button>
+      <button onclick="changePosition('top-right', this)">Arr. Derecha</button>
+      <button onclick="changePosition('center', this)">Centro</button>
+      <button onclick="changePosition('bottom-left', this)">Ab. Izquierda</button>
+      <button onclick="changePosition('bottom-center', this)">Ab. Centro</button>
+      <button onclick="changePosition('bottom-right', this)">Ab. Derecha</button>
+    </div>
+
+    <div class="section-title">Tema Visual</div>
+    <div class="select-group theme-select">
+      <button onclick="changeTheme('dark', this)" class="active">Oscuro</button>
+      <button onclick="changeTheme('light', this)">Claro</button>
+      <button onclick="changeTheme('system', this)">Sistema (Auto)</button>
+    </div>
+
+    <div class="section-title">Estilo de Apilamiento</div>
+    <div class="select-group stack-select">
+      <button onclick="changeStackStyle('3d', this)" class="active">3D Clásico</button>
+      <button onclick="changeStackStyle('fan', this)">Abanico</button>
+      <button onclick="changeStackStyle('counter', this)">Contador</button>
+    </div>
+  </div>
+
+  <div class="section-title">Fase 3: Smart UI</div>
+  <button onclick="demoHighPriority()">Alta Prioridad</button>
+  <button onclick="demoSmartGroup()">Smart Group (Promedio)</button>
+  <button onclick="demoNormalQueue()">Cola Normal</button>
+
+  <div class="section-title">Fase 2: Micro-interacciones</div>
+  <button onclick="demoSuccessPulse()">Éxito con Pulso</button>
+  <button onclick="demoErrorShake()">Error con Shake</button>
+
+  <div class="section-title">Fase 1: Multimedia</div>
+  <button onclick="demoAvatar()">Notificación con Avatar</button>
+
+  <div class="section-title">IA & Multimedia</div>
+  <button onclick="demoThinking()">Thinking (IA)</button>
+  <button onclick="demoSpeaking()">Speaking</button>
+  <button onclick="demoListening()">Listening</button>
+  <button onclick="demoLoading()">Loading</button>
+  
+  <div class="section-title">Procesos & Acciones</div>
+  <button onclick="demoActionsSuccess()">Success + Acciones</button>
+  <button onclick="demoActionsError()">Error + Reintentar</button>
+  <button onclick="demoDownload()">Download Assets</button>
+  <button onclick="demoUpload()">Upload Progress</button>
+  
+  <button class="finish" onclick="indicator.remove(indicator.activeId)">Cerrar Actual</button>
+</div>
+
+<script src="./meActivityIndicator.js"></script>
+<script>
+
+  /* INSTANCIA ÚNICA */
+  const indicator = new meActivityIndicator({ position: 'top-center', theme: 'dark' });
+
+  /* FUNCIONES DE PRUEBA (DEMOS) */
+
+  function changePosition(pos, btn) {
+    indicator.setPosition(pos);
+    document.querySelectorAll('.position-select button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function changeTheme(theme, btn) {
+    indicator.setTheme(theme);
+    document.querySelectorAll('.theme-select button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function changeStackStyle(s, b) {
+    indicator.setStackStyle(s);
+    updateActive(b, '.stack-select');
+  }
+  function updateActive(b, s) { document.querySelectorAll(`${s} button`).forEach(btn => btn.classList.remove('active')); b.classList.add('active'); }
+
+  // --- FASE 3 DEMOS ---
+
+  function demoHighPriority() {
+    indicator.add({ type: 'info', title: 'Tarea en curso...', duration: 5000 });
+    setTimeout(() => {
+      indicator.add({ type: 'error', priority: 'high', title: '⚠️ PRIORIDAD ALTA', subtitle: 'He saltado la cola automáticamente', duration: 4000, soundUrl: 'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3' });
+    }, 1000);
+  }
+
+  function demoSmartGroup() {
+    // Testeamos el promedio: añadimos progresos 0.2, 0.4, 0.6, 0.8
+    for(let i=1; i<=4; i++) {
+      setTimeout(() => {
+        indicator.add({ 
+            groupId: 'upload-batch', 
+            groupTitle: 'Subiendo {n} archivos', 
+            type: 'loading', 
+            title: 'Subiendo archivo...', 
+            subtitle: `Fichero_${i}.pdf`, 
+            progress: i * 0.2, // Al final debería marcar 0.5 (promedio de 0.2, 0.4, 0.6, 0.8)
+            duration: 3000 
+        });
+      }, i * 400);
+    }
+  }
+
+  function demoNormalQueue() {
+    indicator.add({ type: 'info', title: 'Cola 1', duration: 1500 });
+    indicator.add({ type: 'info', title: 'Cola 2', duration: 1500, waitToDisplay: true });
+    indicator.add({ type: 'info', title: 'Cola 3', duration: 1500, waitToDisplay: true });
+  }
+
+  // --- FASE 2 DEMOS ---
+
+  function demoSuccessPulse() {
+    indicator.add({ type: 'success', title: 'Operación Exitosa', subtitle: 'Con animación de pulso', duration: 3000 });
+  }
+
+  function demoErrorShake() {
+    indicator.add({ type: 'error', title: 'Error de Red', subtitle: 'Con vibración lateral', duration: 3000 });
+  }
+
+  // --- RESTO DE DEMOS ---
+
+  function demoAvatar() {
+    indicator.add({
+      type: 'generic', title: 'Nueva mención', subtitle: '@juan_perez te ha etiquetado', avatarUrl: 'https://i.pravatar.cc/100?u=juan', duration: 5000,
+      actions: [{ label: 'Responder', type: 'primary', onClick: () => console.log('Abriendo chat...') }, { label: 'Visto', onClick: (ctx) => indicator.remove(ctx.activityId) }]
+    });
+  }
+
+  function demoActionsSuccess() {
+    indicator.add({ type: 'success', title: 'Archivo exportado', subtitle: '¿Deseas abrir la carpeta?', duration: 5000, actions: [{ label: 'Ver Carpeta', type: 'primary', onClick: () => console.log('Abriendo carpeta...') }, { label: 'Descartar', onClick: (ctx) => indicator.remove(ctx.activityId) }] });
+  }
+
+  function demoActionsError() {
+    indicator.add({ type: 'error', title: 'Error de conexión', subtitle: 'No se pudo sincronizar', isBlocking: true, actions: [{ label: 'Reintentar', type: 'primary', onClick: () => demoSuccess() }, { label: 'Cancelar', onClick: (ctx) => indicator.remove(ctx.activityId) }] });
+  }
+
+  function demoUpload() {
+    const id = "up-progress";
+    indicator.add({ id, type: 'generic', icon: indicator.icons.upload, title: 'Subiendo Video', subtitle: '0%', progress: 0 });
+    let p = 0;
+    const itv = setInterval(() => {
+      p += 0.2;
+      if (p >= 1) { clearInterval(itv); indicator.update(id, { progress: 1, subtitle: 'Completado', type: 'success', icon: null, duration: 2000 }); }
+      else indicator.update(id, { progress: p, subtitle: `${Math.round(p*100)}%` });
+    }, 700);
+  }
+
+  function demoDownload() {
+    indicator.add({ type: 'info', icon: indicator.icons.download, title: 'Descargando Assets', subtitle: 'package_final.zip', progress: 0.75, duration: 4000 });
+  }
+
+  async function demoSuccess() {
+    await indicator.add({ type: 'success', title: 'Tarea Completada', subtitle: 'Todo se procesó correctamente', duration: 3000 });
+  }
+
+  function demoError() {
+    indicator.add({ type: 'error', title: 'Error Simple', subtitle: 'Ha ocurrido un problema', duration: 3000 });
+  }
+
+  function demoWarning() {
+    indicator.add({ type: 'warning', title: 'Aviso de Seguridad', subtitle: 'Inicio de sesión extraño', duration: 5000, soundUrl: 'https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3' });
+  }
+
+  function demoInfo() {
+    indicator.add({ type: 'info', title: 'Información', subtitle: 'Sistema actualizado a v2.0', duration: 4000 });
+  }
+
+  function demoThinking() { indicator.add({ type: 'thinking', title: 'Me AI pensando', subtitle: 'Analizando requerimientos...', duration: 5000 }); }
+  function demoLoading() { indicator.add({ type: 'loading', title: 'Cargando Entorno', subtitle: 'Preparando componentes...', duration: 4000 }); }
+
+  function demoSpeaking() {
+    indicator.add({ type: 'generic', icon: indicator.icons.speaking, title: 'Asistente', subtitle: 'Hablando ahora...', duration: 3000 });
+  }
+
+  function demoListening() {
+    indicator.add({ type: 'warning', icon: indicator.icons.listening, title: 'Escuchando', subtitle: 'Dime qué necesitas', duration: 4000 });
+  }
+
+</script>
+</body>
+</html>
